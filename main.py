@@ -19,7 +19,7 @@ if __name__ == "__main__":
     args = vars(parser.parse_args())
     
     if args['architecture'] == 'minDistance':
-        from architectures.minDistance import MinDistance
+        from architectures.linearHandModel import MinDistance
 
         hd = MinDistance(args['models'])
         print("Prediction: ", hd.classify(args['example'], args['verbose']))

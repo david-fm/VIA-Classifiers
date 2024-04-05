@@ -7,7 +7,7 @@ app = marimo.App()
 @app.cell
 def __():
     import marimo as mo
-    from architectures.minDistance import MinDistance
+    from architectures.linearHandModel import MinDistance
     return MinDistance, mo
 
 
