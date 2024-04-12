@@ -12,7 +12,7 @@ if __name__ == "__main__":
     parser.add_argument('-m', '--models', type=str, default=MODELS_PATH, help='Path to the models folder')
     parser.add_argument('-e', '--example', type=str, default=A_EXAMPLE_PATH, help='Path to the example to classify')
     parser.add_argument('-t', '--test', type=str, default=TEST_FOLDER, help='Path to the test folder')
-    parser.add_argument('-a', '--architecture', type=str, default='minDistance', help='Architecture to use as classifier', choices=['minDistance', 'embedder'])
+    parser.add_argument('-a', '--architecture', type=str, default='minDistance', help='Architecture to use as classifier', choices=['minDistance', 'embedder', 'sift'])
     parser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode')
 
 
@@ -34,4 +34,13 @@ if __name__ == "__main__":
         print("Prediction: ", hd.classify(args['example'], args['verbose']))
 
         hd_2 = Embedder(args['models'], args['test'])
+        print("Accuracy",hd_2.accuracy())
+    
+    elif args['architecture'] == 'sift':
+        from architectures.sift import SIFT
+
+        hd = SIFT(args['models'])
+        print("Prediction: ", hd.classify(args['example'], args['verbose']))
+
+        hd_2 = SIFT(args['models'], args['test'])
         print("Accuracy",hd_2.accuracy())
