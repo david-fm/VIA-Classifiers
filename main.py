@@ -9,10 +9,10 @@ if __name__ == "__main__":
     TEST_FOLDER = os.path.join(os.path.dirname(__file__), 'data')
 
     parser = argparse.ArgumentParser(description='Create tickets')
-    parser.add_argument('-m', '--models', type=str, default=MODELS_PATH, help='Path to the models folder')
-    parser.add_argument('-e', '--example', type=str, default=A_EXAMPLE_PATH, help='Path to the example to classify')
-    parser.add_argument('-t', '--test', type=str, default=TEST_FOLDER, help='Path to the test folder')
-    parser.add_argument('-a', '--architecture', type=str, default='minDistance', help='Architecture to use as classifier', choices=['minDistance', 'embedder', 'sift'])
+    parser.add_argument('-m', '--models', type=str, help='Path to the models folder', required=True)
+    parser.add_argument('-e', '--example', type=str, help='Path to the example to classify')
+    parser.add_argument('-t', '--test', type=str, help='Path to the test folder')
+    parser.add_argument('-a', '--architecture', type=str, required=True, help='Architecture to use as classifier', choices=['minDistance', 'embedder', 'sift'])
     parser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode')
 
 
@@ -20,27 +20,33 @@ if __name__ == "__main__":
     
     if args['architecture'] == 'minDistance':
         from architectures.linearHandModel import MinDistance
-
+        
         hd = MinDistance(args['models'])
-        print("Prediction: ", hd.classify(args['example'], args['verbose']))
+        if args['example']:
+            print("Prediction: ", hd.classify(args['example'], args['verbose']))
 
-        hd_2 = MinDistance(args['models'], args['test'])
-        print("Accuracy",hd_2.accuracy())
+        if args['test']:
+            hd_2 = MinDistance(args['models'], args['test'])
+            print("Accuracy",hd_2.accuracy())
 
     elif args['architecture'] == 'embedder':
         from architectures.embedder import Embedder
 
         hd = Embedder(args['models'])
-        print("Prediction: ", hd.classify(args['example'], args['verbose']))
+        if args['example']:
+            print("Prediction: ", hd.classify(args['example'], args['verbose']))
 
-        hd_2 = Embedder(args['models'], args['test'])
-        print("Accuracy",hd_2.accuracy())
+        if args['test']:
+            hd_2 = Embedder(args['models'], args['test'])
+            print("Accuracy",hd_2.accuracy())
     
     elif args['architecture'] == 'sift':
         from architectures.sift import SIFT
 
         hd = SIFT(args['models'])
-        print("Prediction: ", hd.classify(args['example'], args['verbose']))
+        if args['example']:
+            print("Prediction: ", hd.classify(args['example'], args['verbose']))
 
-        hd_2 = SIFT(args['models'], args['test'])
-        print("Accuracy",hd_2.accuracy())
+        if args['test']:
+            hd_2 = SIFT(args['models'], args['test'])
+            print("Accuracy",hd_2.accuracy())

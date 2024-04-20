@@ -25,6 +25,7 @@ class Embedder(BaseModel):
 
     def __init__(self, models_path, test_path=None):
         super().__init__(models_path, test_path)
+        self.classying_img = None
     
     def loadModels(self, folder):
         print("Loading models")
@@ -40,7 +41,26 @@ class Embedder(BaseModel):
             processed_images = [image_descriptor(image) for image in images]
             self.test[subfolder] = processed_images
         
-    
+    def show_comparition(self, similarities, result):
+        # show the image and bars at the side with the similarities
+        offset = 30
+        # resize the image to add space at the side for the text
+        # resize by adding black space
+        self.classying_img = cv.copyMakeBorder(self.classying_img, 0, 0, 0, 500, cv.BORDER_CONSTANT, value=(0, 0, 0))
+        for key in similarities:
+            cv.putText(
+                self.classying_img, 
+                f"{key}: {float(similarities[key][0]):.2f}", 
+                (self.classying_img.shape[1] - 470, offset),
+                cv.FONT_HERSHEY_SIMPLEX, 
+                1, 
+                (0, 0, 255) if key != result else (0, 255, 0),
+                2)
+            offset += 30
+        cv.imshow("Image", self.classying_img)
+        cv.waitKey(0)
+
+
     def predict(self, descriptor, verbose=False):
         """
             Predict the letter of the image
@@ -59,11 +79,13 @@ class Embedder(BaseModel):
 
             for key in self.model
         }
+        result = max(similarities, key=lambda x: max(similarities[x]))
         
         if verbose:
             import json
             print("Similarities: ", json.dumps(similarities, indent=4))
-        return max(similarities, key=lambda x: max(similarities[x]))
+            self.show_comparition(similarities, result)
+        return result
     
     def accuracy(self):
         """
@@ -86,5 +108,6 @@ class Embedder(BaseModel):
     
     def classify(self, image: str, verbose=False):
         image = cv.imread(image)
+        self.classying_img = image
         descriptor = image_descriptor(image)
         return self.predict(descriptor, verbose=verbose)
