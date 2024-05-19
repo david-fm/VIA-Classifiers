@@ -87,7 +87,7 @@ def clean_tree(paths:List[Path]):
     __pycache__, .git, .ipynb_checkpoints, .vscode, __init__, .png, .pkl
     """
     first_clean = [path for path in paths if path.name not in ['.git', '.vscode', '__pycache__', '.ipynb_checkpoints', '__init__.py', '.DS_Store']]
-    return [path for path in first_clean if not path.name.endswith(('.png', '.pkl'))]
+    return [path for path in first_clean if not path.name.endswith(('.png', '.pkl', '.webp', '.jpeg', '.jpg'))]
 
 def tree(dir_path: Path, prefix: str=''):
     """A recursive generator, given a directory Path object
